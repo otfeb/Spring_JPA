@@ -3,8 +3,9 @@ package jpabook.jpashop.domain.item;
 import jakarta.persistence.*;
 import jpabook.jpashop.domain.Category;
 import jpabook.jpashop.exception.NotEnoughStockException;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Item {
 
     @Id @GeneratedValue
@@ -27,6 +29,13 @@ public abstract class Item {
 
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
+
+    //@Setter 사용 지양을 위한 생성자 추가
+    protected Item(String name, int price, int stockQuantity) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
 
     // 비즈니스 로직 //
 
